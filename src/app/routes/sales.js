@@ -75,12 +75,13 @@ app.get('/getSalesUser', (req, res) => {
   });
 
   app.post('/createSale', (req, res) => {
-    const { id_ventas, id_producto, id_usuario, cantidad, cantidadNueva } = req.body;
+    console.log(req.body)
+    const { id_ventas, id_producto, id_usuario, cantidad } = req.body;
     let connection = dbConnection();
       
     connection.query('INSERT INTO ventas (id_ventas, id_producto, id_usuario, cantidad) VALUES (' + null +','+id_producto+','+id_usuario+','+cantidad+')',
     (err, result) =>{     
-      console.log("Producto",result)
+      console.log("Venta",result)
       res.send('Venta realizada satisfactoriamente');
     })
   })
