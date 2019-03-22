@@ -20,7 +20,7 @@ app.get('/getProducts', (req, res) => {
   });
 });
 
-app.get('/getProductsByProductId', (req, res) => {
+app.get('/getProductByProductId', (req, res) => {
   var productId = req.param('id');
   let connection = dbConnection();
   connection.query('SELECT * FROM producto P inner join tipo_producto TP ON TP.id_tipo_producto = P.id_tipo_producto where id_producto = ' + productId, function(error, result){
@@ -40,22 +40,24 @@ app.get('/getProductsByProductId', (req, res) => {
 });
   
   app.post('/createProduct', (req, res) => {
-    //const { id_producto, nombre } = req.body;
-   console.log(req.body)
+    const { id_producto, nombre, precio, cantidad, id_tipo_producto, oferta } = req.body;
    let connection = dbConnection();
-   connection.end(function(err){
-    connection.query('INSERT INTO producto SET ? ',
-      {
-        id_producto,
-        nombre,
-        precio,
-        cantidad,
-        id_tipo_producto,
-        oferta
-      }, (err, result) => {
-      res.redirect('/news');
-    });
-  })
+   connection.query('INSERT INTO producto (id_producto, nombre, precio, cantidad, id_tipo_producto, oferta) VALUES (' + null +','+'"'+nombre+'"'+','+precio+','+cantidad+','+id_tipo_producto+','+oferta+')',
+   (err, result) => {
+     res.send('Producto guardado correctamente');
+    console.log("Result Insert",result)
+  });
 });
+
+  app.put('/updateProduct', (req,res) => {
+    let connection = dbConnection();
+    const { id_producto, cantidad } = req.body;
+    connection.query('UPDATE producto SET cantidad = '+cantidad+' where id_producto ='+ id_producto),
+    (err, result) =>{     
+      console.log("Producto",result)
+    }
+
+    res.send('Actualizado con exito');
+  })
 
 };

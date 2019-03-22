@@ -6,7 +6,8 @@ module.exports = () => {
     user: 'root',
     password: '',
     database: 'induccionIonic',
-    port:'3306'
+    port:'3306',
+    multipleStatements: true
   });
 
 connection.connect(function(error){
