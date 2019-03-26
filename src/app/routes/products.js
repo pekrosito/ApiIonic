@@ -41,11 +41,12 @@ app.get('/getProductByProductId', (req, res) => {
   
   app.post('/createProduct', (req, res) => {
     const { id_producto, nombre, precio, cantidad, id_tipo_producto, oferta } = req.body;
+    var image = req.body.image;
    let connection = dbConnection();
-   connection.query('INSERT INTO producto (id_producto, nombre, precio, cantidad, id_tipo_producto, oferta) VALUES (' + null +','+'"'+nombre+'"'+','+precio+','+cantidad+','+id_tipo_producto+','+oferta+')',
+   connection.query('INSERT INTO producto (id_producto, nombre, precio, cantidad, id_tipo_producto, oferta, image) VALUES (' + null +','+'"'+nombre+'"'+','+precio+','+cantidad+','+id_tipo_producto+','+oferta+','+'"'+image+'"'+')',
    (err, result) => {
-     res.send('Producto guardado correctamente');
-    console.log("Result Insert",result)
+    console.log("Result Insert",err) 
+    res.send(result);     
   });
 });
 
@@ -55,9 +56,9 @@ app.get('/getProductByProductId', (req, res) => {
     connection.query('UPDATE producto SET cantidad = '+cantidad+' where id_producto ='+ id_producto),
     (err, result) =>{     
       console.log("Producto",result)
+      res.send(result);
     }
-
-    res.send('Actualizado con exito');
+    
   })
 
 };
