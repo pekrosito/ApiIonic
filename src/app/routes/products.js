@@ -40,10 +40,9 @@ app.get('/getProductByProductId', (req, res) => {
 });
   
   app.post('/createProduct', (req, res) => {
-    const { id_producto, nombre, precio, cantidad, id_tipo_producto, oferta } = req.body;
-    var image = req.body.image;
+    const { id_producto, nombre, precio, cantidad, habilitado, image } = req.body;
    let connection = dbConnection();
-   connection.query('INSERT INTO producto (id_producto, nombre, precio, cantidad, id_tipo_producto, oferta, image) VALUES (' + null +','+'"'+nombre+'"'+','+precio+','+cantidad+','+id_tipo_producto+','+oferta+','+'"'+image+'"'+')',
+   connection.query('INSERT INTO producto (id_producto, nombre, precio, cantidad, id_tipo_producto, habilitado, image) VALUES (' + null +','+'"'+nombre+'"'+','+precio+','+cantidad+','+1+','+habilitado+','+'"'+image+'"'+')',
    (err, result) => {
     console.log("Result Insert",err) 
     res.send(result);     
@@ -51,14 +50,48 @@ app.get('/getProductByProductId', (req, res) => {
 });
 
   app.put('/updateProduct', (req,res) => {
+    var id_producto = req.param('id');
     let connection = dbConnection();
-    const { id_producto, cantidad } = req.body;
-    connection.query('UPDATE producto SET cantidad = '+cantidad+' where id_producto ='+ id_producto),
-    (err, result) =>{     
-      console.log("Producto",result)
-      res.send(result);
-    }
-    
+    const { cantidad, nombre, precio, habilitado, image } = req.body;
+    connection.query('UPDATE producto SET cantidad = '+cantidad+', nombre ='+ "'" + nombre +"'" +', precio = '+ precio +', habilitado = '+ habilitado +', image = '+ "'" + image+ "'" +' where id_producto ='+ id_producto , function(error, result){
+      connection.end(function(err){
+        if(err){
+          throw err;
+      }else{
+          res.send(result);
+      }
+    })
+    });
   })
+
+  app.put('/updateProductSale', (req,res) => {
+    var id_producto = req.param('id');
+    const { cantidad } = req.body;
+    let connection = dbConnection();
+    connection.query('UPDATE producto SET cantidad = '+cantidad+' where id_producto ='+ id_producto , function(error, result){
+      connection.end(function(err){
+        if(err){
+          throw err;
+      }else{
+          res.send(result);
+      }
+    })
+    });
+  })
+
+  app.put('/updateStateProductById', (req, res) => {
+    var productId = req.param('id');
+    let state = req.body.habilitado;
+    let connection = dbConnection();
+    connection.query('Update producto set habilitado = '+state+' where id_producto = '+ productId, function(error, result){
+      connection.end(function(err){
+        if(err){
+          throw err;
+       }else{
+          res.send(result);
+       }
+      })
+    });
+  });
 
 };
